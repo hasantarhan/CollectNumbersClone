@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7954ea45f9114181b3c8eecac6bb4b03, type: 3}
+  m_Name: GoalConfig
+  m_EditorClassIdentifier: 
+  goals:
+  - type: 1
+    amount: 3
+  moveCount: 6
+  goalIndicatorPrefab: {fileID: 8233250696193573068, guid: 6b41f2dd850da304f9db2af3ed2eaa2a, type: 3}
