@@ -1,8 +1,6 @@
-﻿
-using Game.Configs;
+﻿using Game.Configs;
 using TMPro;
 using UnityEngine;
-
 
 namespace Game.Entities
 {
@@ -31,6 +29,7 @@ namespace Game.Entities
                 }
             }
         }
+
         public void Setup(Goal goal)
         {
             goalColorView = GetComponentInChildren<ColorView>();

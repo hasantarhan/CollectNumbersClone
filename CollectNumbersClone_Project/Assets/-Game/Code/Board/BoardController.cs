@@ -3,6 +3,7 @@ using DG.Tweening;
 using Game.Configs;
 using UnityEngine;
 using UnityEngine.Events;
+
 namespace Game.Board
 {
     public class BoardController : MonoBehaviour

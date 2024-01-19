@@ -6,7 +6,6 @@ using Object = UnityEngine.Object;
 namespace Game.Board
 {
     [Serializable]
-
     public class Item
     {
         public Cell Cell { get; private set; }

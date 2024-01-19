@@ -1,5 +1,4 @@
-﻿
-using Game.Base;
+﻿using Game.Base;
 using UnityEngine;
 
 namespace Game.Board
@@ -23,20 +22,20 @@ namespace Game.Board
 
         protected override string GetPrefabName()
         {
-            var prefabName = string.Empty;
+            string prefabName = string.Empty;
             switch (ItemType)
             {
                 case itemType.TYPE_ONE:
-                    prefabName = CONSTANTS.PREFAB_NORMAL_TYPE_ONE;
+                    prefabName = PATHS.PREFAB_NORMAL_TYPE_ONE;
                     break;
                 case itemType.TYPE_TWO:
-                    prefabName = CONSTANTS.PREFAB_NORMAL_TYPE_TWO;
+                    prefabName = PATHS.PREFAB_NORMAL_TYPE_TWO;
                     break;
                 case itemType.TYPE_THREE:
-                    prefabName = CONSTANTS.PREFAB_NORMAL_TYPE_THREE;
+                    prefabName = PATHS.PREFAB_NORMAL_TYPE_THREE;
                     break;
                 case itemType.TYPE_FOUR:
-                    prefabName = CONSTANTS.PREFAB_NORMAL_TYPE_FOUR;
+                    prefabName = PATHS.PREFAB_NORMAL_TYPE_FOUR;
                     break;
             }
 

@@ -30,7 +30,7 @@ namespace Game.Board
         private void CreateBoard()
         {
             var origin = new Vector3(-boardSizeX * 0.5f + 0.5f, -boardSizeY * 0.5f + 0.5f, 0f);
-            var prefabBG = Resources.Load<GameObject>(CONSTANTS.PREFAB_CELL_BACKGROUND);
+            var prefabBG = Resources.Load<GameObject>(PATHS.PREFAB_CELL_BACKGROUND);
             for (int x = 0; x < boardSizeX; x++)
             for (int y = 0; y < boardSizeY; y++)
             {

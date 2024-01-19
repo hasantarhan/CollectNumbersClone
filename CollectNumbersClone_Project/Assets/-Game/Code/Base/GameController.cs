@@ -1,4 +1,3 @@
-
 using EventArch;
 using Game.Configs;
 using UnityEngine;
@@ -15,7 +14,7 @@ namespace Game.Base
         private void Awake()
         {
             DataManager.Init();
-            levelConfig = Resources.Load<LevelConfig>("Configs/LevelConfig");
+            levelConfig = Resources.Load<LevelConfig>(PATHS.LEVEL_CONFIG);
         }
 
         private void Start()

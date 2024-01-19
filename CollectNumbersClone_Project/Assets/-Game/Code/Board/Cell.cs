@@ -26,13 +26,6 @@ namespace Game.Board
             BoardY = cellY;
         }
 
-        public bool IsNeighbour(Cell other)
-        {
-            return (BoardX == other.BoardX && Mathf.Abs(BoardY - other.BoardY) == 1) ||
-                   (BoardY == other.BoardY && Mathf.Abs(BoardX - other.BoardX) == 1);
-        }
-
-
         public void Free()
         {
             Item = null;
@@ -73,5 +66,4 @@ namespace Game.Board
             Item = null;
         }
     }
-
 }

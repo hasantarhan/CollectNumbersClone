@@ -15,8 +15,8 @@ namespace Game.Base
         [SerializeField] private TMP_Text moveCountText;
         [SerializeField] private Transform boardSpawnPoint;
         [SerializeField] private Transform canvas;
-        private BoardController boardController;
         private readonly List<GoalIndicator> goalIndicators = new();
+        private BoardController boardController;
         private int moveCount;
         private Player player;
         private VisualConfig visualConfig;
@@ -33,7 +33,7 @@ namespace Game.Base
 
         private void Awake()
         {
-            visualConfig = Resources.Load<VisualConfig>("Configs/VisualConfig");
+            visualConfig = Resources.Load<VisualConfig>(PATHS.VISUAL_CONFIG);
         }
 
         private void OnDisable()

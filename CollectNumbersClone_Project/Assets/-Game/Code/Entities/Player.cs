@@ -1,5 +1,4 @@
-﻿
-using EventArch;
+﻿using EventArch;
 using Game.Board;
 using UnityEngine;
 using UnityEngine.Events;

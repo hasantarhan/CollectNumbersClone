@@ -1,8 +1,6 @@
-
 using Game.Base;
 using TMPro;
 using UnityEngine;
-
 
 namespace _Game.UI.Texts
 {
