@@ -2,14 +2,16 @@
 {
     public static class Events
     {
-       public static OnStartGame onStartGame = new OnStartGame();
-       public static OnFinishGame onFinishGame = new OnFinishGame();
+        public static OnStartGame onStartGame = new();
+        public static OnFinishGame onFinishGame = new();
     }
-    public class OnStartGame : GameEvent { }
+
+    public class OnStartGame : GameEvent
+    {
+    }
 
     public class OnFinishGame : GameEvent
     {
         public bool WinState { get; set; }
     }
- 
 }

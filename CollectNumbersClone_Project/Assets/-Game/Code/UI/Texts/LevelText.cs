@@ -1,14 +1,17 @@
-using System;
+
+using Game.Base;
 using TMPro;
 using UnityEngine;
 
-namespace _Game.Code.UI
+
+namespace _Game.UI.Texts
 {
     [RequireComponent(typeof(TextMeshProUGUI))]
     public class LevelText : MonoBehaviour
     {
+        private readonly string header = "LEVEL ";
         private TextMeshProUGUI text;
-        private string header = "LEVEL ";
+
         private void Start()
         {
             text = GetComponent<TextMeshProUGUI>();

@@ -1,9 +1,11 @@
-using System;
+
+using Game.Base;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace _Game.Code.UI
+
+namespace Game.UI.Buttons
 {
     [RequireComponent(typeof(Button))]
     public class NextLevelButton : MonoBehaviour

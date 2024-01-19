@@ -1,5 +1,9 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections.Generic;
+
+#endregion
 
 namespace EventArch
 {
@@ -16,17 +20,13 @@ namespace EventArch
         {
             if (!listenerToAction.ContainsKey(listener))
             {
-                Action<GameEvent> action = (e) => listener((T)e);
+                Action<GameEvent> action = e => listener((T)e);
                 listenerToAction[listener] = action;
 
-                if (eventTypeToListener.TryGetValue(typeof(T), out Action<GameEvent> existingAction))
-                {
+                if (eventTypeToListener.TryGetValue(typeof(T), out var existingAction))
                     eventTypeToListener[typeof(T)] += action;
-                }
                 else
-                {
                     eventTypeToListener[typeof(T)] = action;
-                }
             }
         }
 
@@ -38,13 +38,9 @@ namespace EventArch
                 {
                     existingAction -= action;
                     if (existingAction == null)
-                    {
                         eventTypeToListener.Remove(typeof(T));
-                    }
                     else
-                    {
                         eventTypeToListener[typeof(T)] = existingAction;
-                    }
                 }
 
                 listenerToAction.Remove(listener);
@@ -53,10 +49,7 @@ namespace EventArch
 
         public static void Broadcast(GameEvent gameEvent)
         {
-            if (eventTypeToListener.TryGetValue(gameEvent.GetType(), out var action))
-            {
-                action.Invoke(gameEvent);
-            }
+            if (eventTypeToListener.TryGetValue(gameEvent.GetType(), out var action)) action.Invoke(gameEvent);
         }
 
         public static void Clear()

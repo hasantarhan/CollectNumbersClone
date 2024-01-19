@@ -1,71 +1,75 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿
+using Game.Base;
 using UnityEngine;
 
-public class NormalItem : Item
+namespace Game.Board
 {
-    public enum itemType
+    public class NormalItem : Item
     {
-        TYPE_ONE = 1,
-        TYPE_TWO = 2,
-        TYPE_THREE = 3,
-        TYPE_FOUR = 4,
-    }
-
-    public itemType ItemType;
-
-    public void SetType(itemType type)
-    {
-        ItemType = type;
-    }
-
-    protected override string GetPrefabName()
-    {
-        var prefabname = string.Empty;
-        switch (ItemType)
+        public enum itemType
         {
-            case itemType.TYPE_ONE:
-                prefabname = CONSTANTS.PREFAB_NORMAL_TYPE_ONE;
-                break;
-            case itemType.TYPE_TWO:
-                prefabname = CONSTANTS.PREFAB_NORMAL_TYPE_TWO;
-                break;
-            case itemType.TYPE_THREE:
-                prefabname = CONSTANTS.PREFAB_NORMAL_TYPE_THREE;
-                break;
-            case itemType.TYPE_FOUR:
-                prefabname = CONSTANTS.PREFAB_NORMAL_TYPE_FOUR;
-                break;
+            TYPE_ONE = 1,
+            TYPE_TWO = 2,
+            TYPE_THREE = 3,
+            TYPE_FOUR = 4
         }
 
-        return prefabname;
-    }
+        public itemType ItemType;
 
-    internal override bool IsSameType(Item other)
-    {
-        var it = other as NormalItem;
-
-        return it != null && it.ItemType == this.ItemType;
-    }
-
-    public void Increase()
-    {
-        switch (ItemType)
+        public void SetType(itemType type)
         {
-            case itemType.TYPE_ONE:
-                ItemType = itemType.TYPE_TWO;
-                break;
-            case itemType.TYPE_TWO:
-                ItemType = itemType.TYPE_THREE;
-                break;
-            case itemType.TYPE_THREE:
-                ItemType = itemType.TYPE_FOUR;
-                break;
-            case itemType.TYPE_FOUR:
-                ItemType = itemType.TYPE_ONE;
-                break;
+            ItemType = type;
         }
-        GameObject.Destroy(View.gameObject);
-        SetView();
+
+        protected override string GetPrefabName()
+        {
+            var prefabName = string.Empty;
+            switch (ItemType)
+            {
+                case itemType.TYPE_ONE:
+                    prefabName = CONSTANTS.PREFAB_NORMAL_TYPE_ONE;
+                    break;
+                case itemType.TYPE_TWO:
+                    prefabName = CONSTANTS.PREFAB_NORMAL_TYPE_TWO;
+                    break;
+                case itemType.TYPE_THREE:
+                    prefabName = CONSTANTS.PREFAB_NORMAL_TYPE_THREE;
+                    break;
+                case itemType.TYPE_FOUR:
+                    prefabName = CONSTANTS.PREFAB_NORMAL_TYPE_FOUR;
+                    break;
+            }
+
+            return prefabName;
+        }
+
+        internal override bool IsSameType(Item other)
+        {
+            var itemType = other as NormalItem;
+
+            return itemType != null && itemType.ItemType == ItemType;
+        }
+
+        public void Increase()
+        {
+            switch (ItemType)
+            {
+                case itemType.TYPE_ONE:
+                    ItemType = itemType.TYPE_TWO;
+                    break;
+                case itemType.TYPE_TWO:
+                    ItemType = itemType.TYPE_THREE;
+                    break;
+                case itemType.TYPE_THREE:
+                    ItemType = itemType.TYPE_FOUR;
+                    break;
+                case itemType.TYPE_FOUR:
+                    ItemType = itemType.TYPE_ONE;
+                    break;
+            }
+
+            Object.Destroy(View.gameObject);
+            SetView();
+        }
     }
 }

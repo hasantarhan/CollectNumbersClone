@@ -1,14 +1,14 @@
-using System;
 using EventArch;
 using UnityEngine;
 
-namespace _Game.Code.UI
+namespace Game.UI.Screens
 {
     public class EndScreen : MonoBehaviour
     {
         public GameObject content;
         public GameObject win;
         public GameObject fail;
+
         private void OnEnable()
         {
             EventManager.AddListener<OnFinishGame>(ShowMenu);

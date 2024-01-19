@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using _Game.Code.Utils;
+﻿using System.Collections.Generic;
 using DG.Tweening;
 using EventArch;
+using Game.Board;
+using Game.Configs;
+using Game.Entities;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace _Game.Code
+namespace Game.Base
 {
     public class LevelController : MonoBehaviour
     {
@@ -15,11 +15,11 @@ namespace _Game.Code
         [SerializeField] private TMP_Text moveCountText;
         [SerializeField] private Transform boardSpawnPoint;
         [SerializeField] private Transform canvas;
-        private VisualConfig visualConfig;
         private BoardController boardController;
-        private List<GoalIndicator> goalIndicators = new();
-        private Player player;
+        private readonly List<GoalIndicator> goalIndicators = new();
         private int moveCount;
+        private Player player;
+        private VisualConfig visualConfig;
 
         public int MoveCount
         {
@@ -36,6 +36,11 @@ namespace _Game.Code
             visualConfig = Resources.Load<VisualConfig>("Configs/VisualConfig");
         }
 
+        private void OnDisable()
+        {
+            boardController.onMatchesFound -= SetMatches;
+        }
+
         public void Setup(LevelData levelData)
         {
             this.levelData = levelData;
@@ -50,11 +55,6 @@ namespace _Game.Code
             boardController = boardGo.AddComponent<BoardController>();
             boardController.Setup(levelData.boardConfig);
             boardController.onMatchesFound += SetMatches;
-        }
-
-        private void OnDisable()
-        {
-            boardController.onMatchesFound -= SetMatches;
         }
 
         private void LevelSetup()
@@ -87,15 +87,10 @@ namespace _Game.Code
 
         private void CheckWinState()
         {
-            var winState = true;
+            bool winState = true;
             if (moveCount <= 0)
-            {
                 winState = !GoalIndicatorCheck();
-            }
-            else if (GoalIndicatorCheck())
-            {
-                return;
-            }
+            else if (GoalIndicatorCheck()) return;
 
             Events.onFinishGame.WinState = winState;
             EventManager.Broadcast(Events.onFinishGame);
@@ -106,12 +101,8 @@ namespace _Game.Code
         private bool GoalIndicatorCheck()
         {
             foreach (var goalIndicator in goalIndicators)
-            {
                 if (goalIndicator.Amount > 0)
-                {
                     return true;
-                }
-            }
 
             return false;
         }
@@ -124,7 +115,6 @@ namespace _Game.Code
                 var item = (NormalItem)cell.Item;
                 var goalIndicator = goalIndicators.Find(x => x.Goal.type == item.ItemType);
                 if (goalIndicator != null)
-                {
                     if (goalIndicator.Amount > 0)
                     {
                         var ps = visualConfig.goalParticles.Find(x => x.type == item.ItemType).ps;
@@ -136,7 +126,6 @@ namespace _Game.Code
                             goalIndicator.Amount -= 1;
                         });
                     }
-                }
             }
 
             DOTween.Sequence().AppendInterval(0.5f).AppendCallback(delegate { CheckWinState(); });

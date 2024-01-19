@@ -1,9 +1,10 @@
-﻿using System;
+﻿
 using EventArch;
+using Game.Board;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace _Game.Code
+namespace Game.Entities
 {
     public class Player : MonoBehaviour
     {
@@ -13,6 +14,17 @@ namespace _Game.Code
         private void Awake()
         {
             camera1 = Camera.main;
+        }
+
+        private void Update()
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                var hit = Physics2D.Raycast(
+                    camera1.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10)),
+                    Vector2.zero);
+                if (hit.transform != null && hit.transform.TryGetComponent(out Cell cell)) onCellClicked?.Invoke(cell);
+            }
         }
 
         private void OnEnable()
@@ -28,20 +40,6 @@ namespace _Game.Code
         private void Disable(OnFinishGame obj)
         {
             enabled = false;
-        }
-
-        private void Update()
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                var hit = Physics2D.Raycast(
-                    camera1.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10)),
-                    Vector2.zero);
-                if (hit.transform != null && hit.transform.TryGetComponent(out Cell cell))
-                {
-                    onCellClicked?.Invoke(cell);
-                }
-            }
         }
     }
 }

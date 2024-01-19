@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Game.Board;
 using UnityEngine;
 
-namespace _Game.Code
+namespace Game.Configs
 {
     [CreateAssetMenu(fileName = "VisualConfig", menuName = "Game/Visual Config", order = 0)]
     public class VisualConfig : ScriptableObject
@@ -13,12 +14,8 @@ namespace _Game.Code
         public Color GetBoyTypeColor(NormalItem.itemType type)
         {
             foreach (var colorData in colors)
-            {
                 if (colorData.Type == type)
-                {
                     return colorData.Color;
-                }
-            }
 
             return Color.white;
         }

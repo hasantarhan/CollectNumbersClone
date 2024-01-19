@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace _Game.Code
+namespace Game.Configs
 {
     [CreateAssetMenu(fileName = "LevelConfig", menuName = "Game/LevelConfig", order = 0)]
     public class LevelConfig : ScriptableObject

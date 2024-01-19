@@ -1,4 +1,8 @@
+#region
+
 using UnityEditor;
+
+#endregion
 
 namespace Katana.Editor
 {
@@ -28,6 +32,5 @@ namespace Katana.Editor
             enabled_ = enabled;
             EditorSettings.enterPlayModeOptionsEnabled = enabled;
         }
-        
     }
 }

@@ -1,40 +1,41 @@
-﻿using DG.Tweening;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using _Game.Code;
+﻿using System.Collections.Generic;
+using DG.Tweening;
+using Game.Base;
+using Game.Configs;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
-public class Match3Board
+namespace Game.Board
 {
-    private int boardSizeX;
-    private int boardSizeY;
-    private Cell[,] cells;
-    private Transform root;
-    private int matchMin;
-    private List<StartItem> startItems;
-    public Match3Board(Transform rootTransform, BoardConfig boardConfig)
+    public class Match3Board
     {
-        root = rootTransform;
-        matchMin = boardConfig.matchesMin;
-        startItems = boardConfig.startItems;
-        this.boardSizeX = boardConfig.boardSizeX;
-        this.boardSizeY = boardConfig.boardSizeY;
-        cells = new Cell[boardSizeX, boardSizeY];
-        CreateBoard();
-    }
+        private readonly int boardSizeX;
+        private readonly int boardSizeY;
+        private readonly Cell[,] cells;
+        private readonly int matchMin;
+        private readonly Transform root;
+        private readonly List<StartItem> startItems;
 
-    private void CreateBoard()
-    {
-        var origin = new Vector3(-boardSizeX * 0.5f + 0.5f, -boardSizeY * 0.5f + 0.5f, 0f);
-        var prefabBG = Resources.Load<GameObject>(CONSTANTS.PREFAB_CELL_BACKGROUND);
-        for (int x = 0; x < boardSizeX; x++)
+        public Match3Board(Transform rootTransform, BoardConfig boardConfig)
         {
+            root = rootTransform;
+            matchMin = boardConfig.matchesMin;
+            startItems = boardConfig.startItems;
+            boardSizeX = boardConfig.boardSizeX;
+            boardSizeY = boardConfig.boardSizeY;
+            cells = new Cell[boardSizeX, boardSizeY];
+            CreateBoard();
+        }
+
+        private void CreateBoard()
+        {
+            var origin = new Vector3(-boardSizeX * 0.5f + 0.5f, -boardSizeY * 0.5f + 0.5f, 0f);
+            var prefabBG = Resources.Load<GameObject>(CONSTANTS.PREFAB_CELL_BACKGROUND);
+            for (int x = 0; x < boardSizeX; x++)
             for (int y = 0; y < boardSizeY; y++)
             {
-                var go = GameObject.Instantiate(prefabBG);
-                go.transform.position = origin + new Vector3(x, y+root.transform.position.y, 0f);
+                var go = Object.Instantiate(prefabBG);
+                go.transform.position = origin + new Vector3(x, y + root.transform.position.y, 0f);
                 go.transform.SetParent(root);
 
                 var cell = go.GetComponent<Cell>();
@@ -42,10 +43,8 @@ public class Match3Board
 
                 cells[x, y] = cell;
             }
-        }
 
-        for (int x = 0; x < boardSizeX; x++)
-        {
+            for (int x = 0; x < boardSizeX; x++)
             for (int y = 0; y < boardSizeY; y++)
             {
                 if (y + 1 < boardSizeY) cells[x, y].NeighbourUp = cells[x, y + 1];
@@ -55,12 +54,9 @@ public class Match3Board
             }
         }
 
-    }
-
-    internal void Fill()
-    {
-        for (int x = 0; x < boardSizeX; x++)
+        internal void Fill()
         {
+            for (int x = 0; x < boardSizeX; x++)
             for (int y = 0; y < boardSizeY; y++)
             {
                 var cell = cells[x, y];
@@ -70,70 +66,39 @@ public class Match3Board
                 if (cell.NeighbourBottom != null)
                 {
                     var nitem = cell.NeighbourBottom.Item as NormalItem;
-                    if (nitem != null)
-                    {
-                        types.Add(nitem.ItemType);
-                    }
+                    if (nitem != null) types.Add(nitem.ItemType);
                 }
 
                 if (cell.NeighbourLeft != null)
                 {
                     var nitem = cell.NeighbourLeft.Item as NormalItem;
-                    if (nitem != null)
-                    {
-                        types.Add(nitem.ItemType);
-                    }
+                    if (nitem != null) types.Add(nitem.ItemType);
                 }
-                item.SetType(Match3Utilities.GetRandomNormalTypeExcept(types.ToArray()));
+
+                item.SetType(Match3Utility.GetRandomNormalTypeExcept(types.ToArray()));
                 item.SetView();
                 item.SetViewRoot(root);
                 cell.Assign(item);
                 cell.ApplyItemPosition(false);
             }
-        }
 
-        for (int i = 0; i < startItems.Count; i++)
-        {
-            var staticValue = startItems[i];
-            var cell = cells[staticValue.x, staticValue.y];
-            var item = new NormalItem();
-            item.SetType(staticValue.value);
-            item.SetView();
-            item.SetViewRoot(root);
-            cell.Clear();
-            cell.Assign(item);
-            cell.ApplyItemPosition(false);
-        }
-    }
-
-    internal void Shuffle()
-    {
-       var list = new List<Item>();
-        for (int x = 0; x < boardSizeX; x++)
-        {
-            for (int y = 0; y < boardSizeY; y++)
+            for (int i = 0; i < startItems.Count; i++)
             {
-                list.Add(cells[x, y].Item);
-                cells[x, y].Free();
+                var staticValue = startItems[i];
+                var cell = cells[staticValue.x, staticValue.y];
+                var item = new NormalItem();
+                item.SetType(staticValue.value);
+                item.SetView();
+                item.SetViewRoot(root);
+                cell.Clear();
+                cell.Assign(item);
+                cell.ApplyItemPosition(false);
             }
         }
 
-        for (int x = 0; x < boardSizeX; x++)
+        internal void FillGapsWithNewItems()
         {
-            for (int y = 0; y < boardSizeY; y++)
-            {
-                int rnd = UnityEngine.Random.Range(0, list.Count);
-                cells[x, y].Assign(list[rnd]);
-                cells[x, y].ApplyItemMoveToPosition();
-
-                list.RemoveAt(rnd);
-            }
-        }
-    }
-    internal void FillGapsWithNewItems()
-    {
-        for (int x = 0; x < boardSizeX; x++)
-        {
+            for (int x = 0; x < boardSizeX; x++)
             for (int y = 0; y < boardSizeY; y++)
             {
                 var cell = cells[x, y];
@@ -141,7 +106,7 @@ public class Match3Board
 
                 var item = new NormalItem();
 
-                item.SetType(Match3Utilities.GetRandomNormalType());
+                item.SetType(Match3Utility.GetRandomNormalType());
                 item.SetView();
                 item.SetViewRoot(root);
 
@@ -149,109 +114,108 @@ public class Match3Board
                 cell.ApplyItemPosition(true);
             }
         }
-    }
 
-    internal void ExplodeAllItems()
-    {
-        for (int x = 0; x < boardSizeX; x++)
+        public void IncreaseItem(Cell cell)
         {
-            for (int y = 0; y < boardSizeY; y++)
-            {
-                var cell = cells[x, y];
-                cell.ExplodeItem();
-            }
-        }
-    }
-
-    public void IncreaseItem(Cell cell)
-    {
-        var item = cell.Item as NormalItem;
-        if (item == null) return;
-        cell.Free();
-        item.Increase();
-        cell.Assign(item);
-        cell.ApplyItemPosition(true);
-    }
-
-    public List<Cell> GetHorizontalMatches(Cell cell)
-    {
-        var list = new List<Cell>();
-        list.Add(cell);
-
-       
-        var newCell = cell;
-        while (true)
-        {
-            var neighbourRight = newCell.NeighbourRight;
-            if (neighbourRight == null) break;
-
-            if (neighbourRight.IsSameType(cell))
-            {
-                list.Add(neighbourRight);
-                newCell = neighbourRight;
-            }
-            else break;
+            var item = cell.Item as NormalItem;
+            if (item == null) return;
+            cell.Free();
+            item.Increase();
+            cell.Assign(item);
+            cell.ApplyItemPosition(true);
         }
 
-        newCell = cell;
-        while (true)
+        public List<Cell> GetHorizontalMatches(Cell cell)
         {
-            var neighbourLeft = newCell.NeighbourLeft;
-            if (neighbourLeft == null) break;
+            var list = new List<Cell>();
+            list.Add(cell);
 
-            if (neighbourLeft.IsSameType(cell))
+
+            var newCell = cell;
+            while (true)
             {
-                list.Add(neighbourLeft);
-                newCell = neighbourLeft;
+                var neighbourRight = newCell.NeighbourRight;
+                if (neighbourRight == null) break;
+
+                if (neighbourRight.IsSameType(cell))
+                {
+                    list.Add(neighbourRight);
+                    newCell = neighbourRight;
+                }
+                else
+                {
+                    break;
+                }
             }
-            else break;
+
+            newCell = cell;
+            while (true)
+            {
+                var neighbourLeft = newCell.NeighbourLeft;
+                if (neighbourLeft == null) break;
+
+                if (neighbourLeft.IsSameType(cell))
+                {
+                    list.Add(neighbourLeft);
+                    newCell = neighbourLeft;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return list;
         }
 
-        return list;
-    }
 
-
-    public List<Cell> GetVerticalMatches(Cell cell)
-    {
-        var list = new List<Cell>();
-        list.Add(cell);
-
-        var newCell = cell;
-        while (true)
+        public List<Cell> GetVerticalMatches(Cell cell)
         {
-            var neighbourUp = newCell.NeighbourUp;
-            if (neighbourUp == null) break;
+            var list = new List<Cell>();
+            list.Add(cell);
 
-            if (neighbourUp.IsSameType(cell))
+            var newCell = cell;
+            while (true)
             {
-                list.Add(neighbourUp);
-                newCell = neighbourUp;
+                var neighbourUp = newCell.NeighbourUp;
+                if (neighbourUp == null) break;
+
+                if (neighbourUp.IsSameType(cell))
+                {
+                    list.Add(neighbourUp);
+                    newCell = neighbourUp;
+                }
+                else
+                {
+                    break;
+                }
             }
-            else break;
+
+            newCell = cell;
+            while (true)
+            {
+                var neighbourBottom = newCell.NeighbourBottom;
+                if (neighbourBottom == null) break;
+
+                if (neighbourBottom.IsSameType(cell))
+                {
+                    list.Add(neighbourBottom);
+                    newCell = neighbourBottom;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return list;
         }
 
-        newCell = cell;
-        while (true)
+        internal List<Cell> FindFirstMatch()
         {
-            var neighbourBottom = newCell.NeighbourBottom;
-            if (neighbourBottom == null) break;
+            var list = new List<Cell>();
 
-            if (neighbourBottom.IsSameType(cell))
-            {
-                list.Add(neighbourBottom);
-                newCell = neighbourBottom;
-            }
-            else break;
-        }
-
-        return list;
-    }
-    internal List<Cell> FindFirstMatch()
-    {
-        var list = new List<Cell>();
-
-        for (int x = 0; x < boardSizeX; x++)
-        {
+            for (int x = 0; x < boardSizeX; x++)
             for (int y = 0; y < boardSizeY; y++)
             {
                 var cell = cells[x, y];
@@ -270,48 +234,46 @@ public class Match3Board
                     break;
                 }
             }
+
+            return list;
         }
 
-        return list;
-    }
-    
-    internal void ShiftDownItems()
-    {
-        for (int x = 0; x < boardSizeX; x++)
+        internal void ShiftDownItems()
         {
-            int shifts = 0;
-            for (int y = 0; y < boardSizeY; y++)
+            for (int x = 0; x < boardSizeX; x++)
             {
-                var cell = cells[x, y];
-                if (cell.IsEmpty)
+                int shifts = 0;
+                for (int y = 0; y < boardSizeY; y++)
                 {
-                    shifts++;
-                    continue;
+                    var cell = cells[x, y];
+                    if (cell.IsEmpty)
+                    {
+                        shifts++;
+                        continue;
+                    }
+
+                    if (shifts == 0) continue;
+
+                    var holder = cells[x, y - shifts];
+
+                    var item = cell.Item;
+                    cell.Free();
+
+                    holder.Assign(item);
+                    item.View.DOMove(holder.transform.position, 0.3f);
                 }
-
-                if (shifts == 0) continue;
-
-                var holder = cells[x, y - shifts];
-
-                var item = cell.Item;
-                cell.Free();
-
-                holder.Assign(item);
-                item.View.DOMove(holder.transform.position, 0.3f);
             }
         }
-    }
 
-    public void Clear()
-    {
-        for (int x = 0; x < boardSizeX; x++)
+        public void Clear()
         {
+            for (int x = 0; x < boardSizeX; x++)
             for (int y = 0; y < boardSizeY; y++)
             {
                 var cell = cells[x, y];
                 cell.Clear();
 
-                GameObject.Destroy(cell.gameObject);
+                Object.Destroy(cell.gameObject);
                 cells[x, y] = null;
             }
         }

@@ -1,12 +1,13 @@
-using System;
+
 using EventArch;
 using UnityEngine;
 
-namespace _Game.Code.UI
+namespace Game.UI.Screens
 {
     public class InGame : MonoBehaviour
     {
         public GameObject content;
+
         private void OnEnable()
         {
             content.SetActive(true);
@@ -22,7 +23,7 @@ namespace _Game.Code.UI
 
         private void HideMenu(OnFinishGame finishGame)
         {
-           content.SetActive(false);
+            content.SetActive(false);
         }
 
         private void ShowMenu(OnStartGame startGame)

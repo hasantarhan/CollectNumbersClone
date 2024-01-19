@@ -1,49 +1,35 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using _Game.Code;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
-using _Game.Code.Utils;
+
 using EventArch;
+using Game.Configs;
+using UnityEngine;
 
-public enum GameState
+namespace Game.Base
 {
-    Boot,
-    Ready,
-    Game,
-    Win,
-    Fail
-}
-
-public class GameController : MonoBehaviour
-{
-    public int loopLevel = 1;
-    public LevelController levelController;
-    public LevelData currentLevelData;
-    private LevelConfig levelConfig;
-
-    private void Awake()
+    public class GameController : MonoBehaviour
     {
-        DataManager.Init();
-        levelConfig = Resources.Load<LevelConfig>("Configs/LevelConfig");
-    }
+        public int loopLevel = 1;
+        public LevelController levelController;
+        public LevelData currentLevelData;
+        private LevelConfig levelConfig;
 
-    private void Start()
-    {
-        var level = DataManager.Player.Level;
-        var maxLevel = levelConfig.levelData.Length - 1;
-        if (level > maxLevel)
+        private void Awake()
         {
-            level = (level - 1) % (maxLevel - loopLevel + 1) + loopLevel;
+            DataManager.Init();
+            levelConfig = Resources.Load<LevelConfig>("Configs/LevelConfig");
         }
-        currentLevelData = levelConfig.levelData[level];
-        levelController.Setup(currentLevelData);
-    }
 
-    private void OnDisable()
-    {
-        EventManager.Clear();
+        private void Start()
+        {
+            int level = DataManager.Player.Level;
+            int maxLevel = levelConfig.levelData.Length - 1;
+            if (level > maxLevel) level = (level - 1) % (maxLevel - loopLevel + 1) + loopLevel;
+            currentLevelData = levelConfig.levelData[level];
+            levelController.Setup(currentLevelData);
+        }
+
+        private void OnDisable()
+        {
+            EventManager.Clear();
+        }
     }
 }

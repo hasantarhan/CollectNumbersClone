@@ -1,14 +1,17 @@
+#region
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Codice.CM.Common.Tree;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using Object = UnityEngine.Object;
+
+#endregion
 
 namespace UnityToolbarExtender
 {
@@ -41,7 +44,7 @@ namespace UnityToolbarExtender
         {
             var getInstanceIDMethod = typeof(AssetDatabase).GetMethod("GetMainAssetInstanceID",
                 BindingFlags.Static | BindingFlags.NonPublic);
-            var instanceID = (int) getInstanceIDMethod.Invoke(null, new object[] {path});
+            int instanceID = (int)getInstanceIDMethod.Invoke(null, new object[] { path });
             ShowFolderContents(instanceID);
         }
 
@@ -61,7 +64,7 @@ namespace UnityToolbarExtender
 
             if (projectBrowserInstances.Length > 0)
             {
-                for (var i = 0; i < projectBrowserInstances.Length; i++)
+                for (int i = 0; i < projectBrowserInstances.Length; i++)
                     ShowFolderContentsInternal(projectBrowserInstances[i], showFolderContents, folderInstanceID);
             }
             else
@@ -77,7 +80,7 @@ namespace UnityToolbarExtender
             // Sadly, there is no method to check for the view mode.
             // We can use the serialized object to find the private property.
             var serializedObject = new SerializedObject(projectBrowser);
-            var inTwoColumnMode = serializedObject.FindProperty("m_ViewMode").enumValueIndex == 1;
+            bool inTwoColumnMode = serializedObject.FindProperty("m_ViewMode").enumValueIndex == 1;
 
             if (!inTwoColumnMode)
             {
@@ -87,8 +90,8 @@ namespace UnityToolbarExtender
                 setTwoColumns.Invoke(projectBrowser, null);
             }
 
-            var revealAndFrameInFolderTree = true;
-            showFolderContents.Invoke(projectBrowser, new object[] {folderInstanceID, revealAndFrameInFolderTree});
+            bool revealAndFrameInFolderTree = true;
+            showFolderContents.Invoke(projectBrowser, new object[] { folderInstanceID, revealAndFrameInFolderTree });
         }
 
         private static EditorWindow OpenNewProjectBrowser(Type projectBrowserType)
@@ -125,13 +128,13 @@ namespace UnityToolbarExtender
         public static T[] GetAtPath<T>(string path)
         {
             var al = new ArrayList();
-            var fileEntries = Directory.GetFiles(Application.dataPath + "/" + path);
+            string[] fileEntries = Directory.GetFiles(Application.dataPath + "/" + path);
 
-            foreach (var fileName in fileEntries)
+            foreach (string fileName in fileEntries)
             {
-                var temp = fileName.Replace("\\", "/");
-                var index = temp.LastIndexOf("/");
-                var localPath = "Assets/" + path;
+                string temp = fileName.Replace("\\", "/");
+                int index = temp.LastIndexOf("/");
+                string localPath = "Assets/" + path;
 
                 if (index > 0)
                     localPath += temp.Substring(index);
@@ -144,8 +147,8 @@ namespace UnityToolbarExtender
 
             var result = new T[al.Count];
 
-            for (var i = 0; i < al.Count; i++)
-                result[i] = (T) al[i];
+            for (int i = 0; i < al.Count; i++)
+                result[i] = (T)al[i];
 
             return result;
         }

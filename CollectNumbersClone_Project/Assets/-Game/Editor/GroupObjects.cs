@@ -1,5 +1,9 @@
+#region
+
 using UnityEditor;
 using UnityEngine;
+
+#endregion
 
 [ExecuteInEditMode]
 public class GroupUnityObjects : Editor

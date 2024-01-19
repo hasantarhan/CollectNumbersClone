@@ -1,8 +1,10 @@
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace _Game.Code.UI
+
+namespace Game.UI.Buttons
 {
     public class RetryButton : MonoBehaviour
     {
