@@ -24,3 +24,5 @@ To edit colors and particle settings, use the **"VisualConfig"** file under **"S
 ### Prefab Adjustments:
 
 To edit the prefabs of elements visible in the game, utilize the prefabs under **"Settings/Resources/Prefabs."**
+
+UI assets credit to https://kenney.nl/assets/ui-pack
